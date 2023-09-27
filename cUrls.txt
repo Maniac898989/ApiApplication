@@ -1,0 +1,82 @@
+Please add the cURLs of your tests here:
+
+
+Curl to Create Show Time
+____________________________
+
+curl -X 'POST' \
+  'https://localhost:7629/api/ShowTime/create-showtime' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json-patch+json' \
+  -d '{
+  "showDate": "2023-09-26T21:27:59.892Z",
+  "showTime": "12:45",
+  "movieID": "ID-test1",
+  "auditoriumID": 1
+}'
+
+
+Curl to get all showtimes
+___________________________
+curl -X 'GET' \
+  'https://localhost:7629/api/ShowTime/get-all-showtimes' \
+  -H 'accept: */*'
+
+
+
+ Curl to get Movie by ID
+  __________________________
+
+  curl -X 'GET' \
+  'https://localhost:7629/api/ShowTime/get-showtime-by-movieId/1' \
+  -H 'accept: */*'
+
+
+  Curl to do Seat Reservation
+  _______________________
+
+  curl -X 'POST' \
+  'https://localhost:7629/api/ShowTime/create-showtime' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json-patch+json' \
+  -d '{
+  "showDate": "2023-09-27T00:03:09.859Z",
+  "showTime": "12:55",
+  "movieID": "tt0110413",
+  "auditoriumID": 1
+}'
+
+
+Curl to GET all Reservations
+_____________________________
+
+curl -X 'GET' \
+  'http://localhost:7172/v1/movies' \
+  -H 'accept: application/json' \
+  -H 'X-Apikey: 68e5fbda-9ec9-4858-97b2-4a8349764c63'
+
+  
+Curl to GET Reservation by GUID
+_______________________________
+
+curl -X 'GET' \
+  'https://localhost:7629/api/Reservation/get-reserved-seats/e855694b-0a79-443d-903b-808214ef44df' \
+  -H 'accept: */*'
+
+
+  Curl to Create Ticket
+  ______________________
+
+  curl -X 'POST' \
+  'https://localhost:7629/api/Ticket/create-ticket?guid=e855694b-0a79-443d-903b-808214ef44df' \
+  -H 'accept: */*' \
+  -d ''
+
+
+  Curl to Confirm Payment
+  _______________________
+
+  curl -X 'POST' \
+  'https://localhost:7629/api/Ticket/confirm-payment?guid=b51606ab-5763-4ca4-aa46-db896b9afc0a' \
+  -H 'accept: */*' \
+  -d ''
