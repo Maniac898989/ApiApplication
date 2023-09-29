@@ -33,6 +33,23 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> ReserveSeats(SeatReservationRequest model)
         {
+            if(model.NoOfReservationSeat <= 0)
+            {
+                return new Result
+                {
+                   IsSuccessful = false,
+                   Message = "Please enter a seat reservation greater than 0"
+                };
+            }
+
+            if (model.ReservationDate < DateTime.Today)
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please select a future date"
+                };
+            }
             Result res = new Result();
             try
             {
@@ -55,10 +72,10 @@ namespace ApiApplication.BusinessLogic.Implementation
 
                             //use this reserve seats to check the ticket table to confirm if it has been paid for
                             var isSitPaidfor = await _ticketsRepository.GetAllPaidTicketsWithSeatAsync(default(CancellationToken));
-                            if(isSitPaidfor != null)
+                            if (isSitPaidfor != null)
                             {
                                 var hasMatch = isSitPaidfor.Select(x => x.Seats.Intersect(reservedSeats)).Any();
-                                if(hasMatch)
+                                if (hasMatch)
                                 {
                                     return new Result { IsSuccessful = false, Message = "Sorry! This seat has been paid for, please try again later" };
                                 }
@@ -117,15 +134,15 @@ namespace ApiApplication.BusinessLogic.Implementation
                                     {
                                         AuditoriumId = movie.AuditoriumId,
                                         Movie = new
-                                        { 
-                                            Title = movie.Movie.Title 
+                                        {
+                                            Title = movie.Movie.Title
                                         },
                                         SessionDate = model.ReservationDate,
                                         SessionTime = TimeSpan.Parse(model.ReservationTime)
                                     }
                                 };
 
-                               
+
 
                                 res.IsSuccessful = true;
                                 res.ReturnedObject = reservationResp;
@@ -183,13 +200,13 @@ namespace ApiApplication.BusinessLogic.Implementation
             return false;
         }
 
+
         public async Task<Result> GetAllReservations()
         {
             Result res = new Result();
 
             try
             {
-
                 var allReservations = await _reservationRepository.GetAllReservationsAsync(default(CancellationToken));
                 if (allReservations.Count() > 0)
                 {
@@ -209,13 +226,22 @@ namespace ApiApplication.BusinessLogic.Implementation
                 res.IsSuccessful = false;
                 Log.Error(ex, ex.Message.ToString());
             }
-          
+
             return res;
 
         }
 
         public async Task<Result> GetReservationByGUID(string guid)
         {
+            if (string.IsNullOrEmpty(guid))
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please provide a valid Reservation Reference"
+                };
+            }
+
             Result res = new Result();
             try
             {

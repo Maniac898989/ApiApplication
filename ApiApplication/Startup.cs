@@ -14,6 +14,10 @@ using ApiApplication.BusinessLogic.Implementation;
 using System.Net.Http;
 using ApiApplication.BusinessLogic.Interfaces;
 using Serilog;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ApiApplication
 {
@@ -40,6 +44,7 @@ namespace ApiApplication
             services.AddTransient<IReservationService, ReservationService>();
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<IAuditoriumService, AuditoriumService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddSingleton<HttpClient>();
             services.AddSwaggerGen(options =>
             {
@@ -49,6 +54,47 @@ namespace ApiApplication
                     Version = "v1",
                     Description = "A simple API to manage cinema bookings",
                 });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "Please use the get-token endpoint to generate a token",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id =  "Bearer"
+                            }
+
+                        }, new string []{ }
+                    }
+                });
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JWT:Issuer"],
+                    ValidAudience = Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Key"]))
+                };
             });
 
             services.AddDbContext<CinemaContext>(options =>
@@ -59,10 +105,9 @@ namespace ApiApplication
             }); ;
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson(x =>
-                {
-                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-
-                });
+            {
+                x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
 
             services.AddHttpClient();

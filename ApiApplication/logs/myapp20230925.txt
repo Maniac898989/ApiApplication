@@ -1,3 +1,0 @@
-2023-09-25 23:23:11.396 +01:00 [INF] Hello World
-2023-09-25 23:41:08.047 +01:00 [INF] Hello World
-2023-09-25 23:44:47.788 +01:00 [INF] The API to get all movies took ====> 4448.4049

@@ -24,6 +24,16 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> CreateTicket(string guid)
         {
+            if (string.IsNullOrEmpty(guid))
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please enter a valid Reservation number for ticket creation"
+                };
+            }
+
+
             Result res = new Result();
             try
             {
@@ -88,6 +98,14 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> Confirmpayment(string guid)
         {
+            if (string.IsNullOrEmpty(guid))
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please enter a valid Reservation number for complete your purchase"
+                };
+            }
             Result res = new Result();
             try
             {

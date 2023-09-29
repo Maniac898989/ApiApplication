@@ -1,5 +1,6 @@
 ﻿using ApiApplication.BusinessLogic.Implementation;
 using ApiApplication.BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiApplication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TicketController : Controller

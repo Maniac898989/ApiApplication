@@ -18,11 +18,15 @@ namespace ApiApplication.BusinessLogic.Implementation
         }
         public async Task<Result> GetSeatsByAuditoriumID(int id)
         {
+            if (id <= 0)
+            {
+                return new Result { IsSuccessful = false, Message = "Please provide a valid Auditorium ID" };
+            }
             Result res = new Result();
             try
             {
                 var auditoriumInfo = await _auditoriumsRepository.GetAsync(id, default(CancellationToken));
-                if(auditoriumInfo != null)
+                if (auditoriumInfo != null)
                 {
                     res.IsSuccessful = true;
                     res.ReturnedObject = auditoriumInfo;

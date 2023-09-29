@@ -1,5 +1,6 @@
 ﻿using ApiApplication.BusinessLogic.Interfaces;
 using ApiApplication.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiApplication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReservationController : Controller
@@ -34,6 +36,7 @@ namespace ApiApplication.Controllers
             else return BadRequest(result);
         }
 
+        
         [HttpGet("get-all-reservations")]
         public async Task<IActionResult> GetAllReservations ()
         {

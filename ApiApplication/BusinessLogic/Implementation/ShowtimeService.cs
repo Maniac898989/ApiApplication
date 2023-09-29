@@ -30,6 +30,16 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> CreateShowTime(Showtime showtime)
         {
+
+            if (showtime.ShowDate < DateTime.Today)
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please select a future date"
+                };
+            }
+
             Result res = new Result();
             try
             {
@@ -150,6 +160,15 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> GetmoviesByID(int id)
         {
+            if (id <= 0)
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please provide a valid movie ID"
+                };
+            }
+
             Result res = new Result();
             try
             {
@@ -202,6 +221,15 @@ namespace ApiApplication.BusinessLogic.Implementation
 
         public async Task<Result> GetmoviesByTicketNo(int id)
         {
+            if (id <= 0)
+            {
+                return new Result
+                {
+                    IsSuccessful = false,
+                    Message = "Please provide a valid movie ticket number"
+                };
+            }
+
             Result res = new Result();
 
             var movie = await _showtimesRepository.GetWithTicketsByIdAsync(id, default(CancellationToken));

@@ -39,7 +39,7 @@ namespace ApiApplication.Services
             
             try
             {
-                var redisConnectionString = _configuration.GetValue<string>("RedisConnectionString");
+                var redisConnectionString = _configuration["RedisConnectionString"];
                 var redis = ConnectionMultiplexer.Connect(redisConnectionString);
                 IDatabase db = redis.GetDatabase();
 
@@ -48,10 +48,10 @@ namespace ApiApplication.Services
                 if (cachedData == null)
                 {
                     _client.DefaultRequestHeaders.Clear();
-                    _client.DefaultRequestHeaders.Add("X-Apikey", _configuration.GetValue<string>("APIKEY"));
+                    _client.DefaultRequestHeaders.Add("X-Apikey", _configuration["APIKEY"]);
 
                     stopwatch.Start();
-                    var movie = await _client.GetAsync(_configuration.GetValue<string>("BaseUrl") + $"movies/{id}");
+                    var movie = await _client.GetAsync(_configuration["BaseUrl"] + $"movies/{id}");
                     stopwatch.Stop();
 
                     var elapsed = stopwatch.Elapsed.TotalSeconds;

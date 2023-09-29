@@ -1,6 +1,6 @@
 services:
   api:
-    image: lodgify/movies-api:3
+    image: franklyns_container_lodgify:tag
     ports:
       - "7172:80"
       - "7443:443"
