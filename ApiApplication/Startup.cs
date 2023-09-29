@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AspNetCoreRateLimit;
 
 namespace ApiApplication
 {
@@ -46,6 +47,17 @@ namespace ApiApplication
             services.AddTransient<IAuditoriumService, AuditoriumService>();
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<HttpClient>();
+
+            services.AddOptions();
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -125,6 +137,7 @@ namespace ApiApplication
             }
 
             app.UseHttpsRedirection();
+            app.UseIpRateLimiting();
 
             app.UseRouting();
             app.UseAuthentication();
